@@ -13,4 +13,5 @@ public interface RecordRepository extends JpaRepository<RecordEntity, Integer> {
 
 	int countByBookAndDateOfReturningNull(BookEntity book);
 	boolean existsByBookAndDateOfReturningIsNullAndReader(BookEntity book, ReaderEntity reader);
+	RecordEntity findByBookIsbnAndDateOfReturningIsNullAndReaderId(long isbn,long id);
 }

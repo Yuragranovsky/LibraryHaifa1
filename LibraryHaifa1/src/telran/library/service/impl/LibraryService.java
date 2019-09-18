@@ -1,7 +1,9 @@
 package telran.library.service.impl;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -95,14 +97,18 @@ public class LibraryService implements ILibrary {
 
 	@Override
 	public LibReturnCode addReader(Reader reader) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		if(readerRepo.existsById(reader.getId()))
+			return LibReturnCode.READER_ALREADY_EXISTS;
+		readerRepo.save(readerMapper.toEntity(reader));
+		return LibReturnCode.OK;
 	}
 
 	@Override
 	public Reader getReader(long readerId) {
-		// TODO Auto-generated method stub
-		return null;
+		ReaderEntity readerEntity =
+				readerRepo.findById(readerId).orElse(null);
+		return readerEntity!=null ? readerMapper.toDto(readerEntity):null;
 	}
 
 	@Override
@@ -125,14 +131,18 @@ public class LibraryService implements ILibrary {
 
 	@Override
 	public LibReturnCode addPublisher(PublisherAuthor publisher) {
-		// TODO Auto-generated method stub
-		return null;
+		if(publisherRepo.existsById(publisher.getName()))
+			return LibReturnCode.PUBLISHER_ALREADY_EXISTS;
+		publisherRepo.save(publisherMapper.toEntity(publisher));
+		return LibReturnCode.OK;
 	}
 
 	@Override
 	public PublisherAuthor getPublisherByName(String publisherName) {
-		// TODO Auto-generated method stub
-		return null;
+		PublisherEntity publisherEntity=publisherRepo
+				.findById(publisherName).orElse(null);
+		return publisherEntity != null ?
+				publisherMapper.toDto(publisherEntity):null;
 	}
 
 	@Override
@@ -149,14 +159,19 @@ public class LibraryService implements ILibrary {
 
 	@Override
 	public LibReturnCode addAuthor(PublisherAuthor author) {
-		// TODO Auto-generated method stub
-		return null;
+		if(authorRepo.existsById(author.getName()))
+			return LibReturnCode.AUTHOR_ALREADY_EXISTS;
+		authorRepo.save(authorMapper.toEntity(author));
+		
+		return LibReturnCode.OK;
 	}
 
 	@Override
 	public List<PublisherAuthor> getAuthorsByName(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		List<AuthorEntity> authors =
+				authorRepo.findAllById(Arrays.asList(name));
+		return authors.stream()
+				.map(authorMapper::toDto).collect(Collectors.toList());
 	}
 
 	@Override
@@ -200,9 +215,26 @@ public class LibraryService implements ILibrary {
 	}
 
 	@Override
+	@Transactional
 	public LibReturnCode returnBook(long isbn, long readerId, LocalDate returnDate) {
-		// TODO Auto-generated method stub
-		return null;
+		RecordEntity recordEntity =
+				recordRepo.findByBookIsbnAndDateOfReturningIsNullAndReaderId(isbn, readerId);
+		if(recordEntity==null) {
+			return LibReturnCode.NO_PICKED;
+		}
+		BookEntity book=bookRepo.getOne(isbn);
+		LocalDate pickDate = recordEntity.getDatePickingingUp();
+	    if(pickDate.isAfter(returnDate))
+	    	return LibReturnCode.DATE_INVALID;
+	    int maxPickDays = book.getMaxDaysInUse();
+	    long pickDays = ChronoUnit.DAYS.between
+	    		(pickDate, returnDate);
+	    long daysDelayed =  pickDays - maxPickDays;
+	    if(daysDelayed > 0)
+	    	recordEntity.setDaysDelayed((int)daysDelayed);
+	    recordEntity.setDateOfReturning(returnDate);
+		
+		return LibReturnCode.OK;
 	}
 
 	@Override
