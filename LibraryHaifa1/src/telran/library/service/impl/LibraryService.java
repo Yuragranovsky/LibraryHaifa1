@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import telran.library.dto.Book;
@@ -22,6 +23,7 @@ import telran.library.service.interfaces.PublisherRepository;
 import telran.library.service.interfaces.ReaderRepository;
 import telran.library.service.interfaces.RecordRepository;
 import telran.library.domain.entities.*;
+@Service
 public class LibraryService implements ILibrary {
 
 	@Autowired
@@ -218,7 +220,8 @@ public class LibraryService implements ILibrary {
 	@Transactional
 	public LibReturnCode returnBook(long isbn, long readerId, LocalDate returnDate) {
 		RecordEntity recordEntity =
-				recordRepo.findByBookIsbnAndDateOfReturningIsNullAndReaderId(isbn, readerId);
+				recordRepo.findByBookIsbnAndDateOfReturningIsNullAndReaderId
+				(isbn, readerId);
 		if(recordEntity==null) {
 			return LibReturnCode.NO_PICKED;
 		}
@@ -275,8 +278,9 @@ public class LibraryService implements ILibrary {
 
 	@Override
 	public List<Reader> getMostActiveReaders(LocalDate from, LocalDate to) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		List<ReaderEntity> readers= readerRepo.getMostActiveReaders(from,to);
+		return readers.stream().map(readerMapper::toDto).collect(Collectors.toList());
 	}
 
 	@Override
