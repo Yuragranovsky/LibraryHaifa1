@@ -1,4 +1,4 @@
-package telran.library.tests;
+package telran.tests;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,7 +18,7 @@ import telran.library.dto.*;
 import telran.library.service.interfaces.ILibrary;
 
 @SpringBootApplication(scanBasePackages = "telran.library")  // components root directory
-@EnableJpaRepositories(basePackages = "telran.library.service")  // repositories root directory
+@EnableJpaRepositories(basePackages = "telran.library.service.interfaces")  // repositories root directory
 @EntityScan(basePackages = "telran.library.domain.entities")// entities root directory
 class LibraryServiceStatisticsTests {
 private static final int N_BOOKS = 4;

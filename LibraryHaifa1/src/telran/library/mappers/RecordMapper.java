@@ -12,7 +12,7 @@ import telran.library.service.interfaces.ReaderRepository;
 import javax.annotation.PostConstruct;
 import java.util.Objects;
 
-@Component
+
 public class RecordMapper extends AbstractMapper<RecordEntity, Record> {
 
     @Autowired
