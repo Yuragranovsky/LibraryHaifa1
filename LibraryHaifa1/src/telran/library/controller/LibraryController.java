@@ -3,6 +3,9 @@ package telran.library.controller;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,6 +24,14 @@ import telran.library.service.interfaces.ILibrary;
 public class LibraryController {
     @Autowired
     ILibrary library;
+@PostConstruct
+public void postConstructMethod() {
+	System.out.println("post construct method");
+}
+@PreDestroy
+public void predestroyMethod() {
+	System.out.println("predestroy method");
+}
 
     @PutMapping(value = LibraryApiConstants.ADD_BOOK_EXEMPLAR)
     public LibReturnCode addBookExemplar(@RequestParam long isbn, @RequestParam int amount) {

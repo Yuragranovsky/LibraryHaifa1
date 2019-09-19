@@ -13,7 +13,7 @@ public interface ReaderRepository extends JpaRepository<ReaderEntity, Long> {
 
 	@Query(value="select * from readers where id in "
 			+ "(select reader_id from  records  where "
-			+ "date_picking_up between :from and :to"
+			+ "date_picking_up between :from and :to "
 			+ "group by reader_id having count(*)=("
 			+ "select max(counter) from "
 			+ "(select count(*) as counter from records where date_picking_up between"

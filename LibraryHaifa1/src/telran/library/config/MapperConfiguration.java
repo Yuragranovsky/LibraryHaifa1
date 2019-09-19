@@ -1,4 +1,4 @@
-package telran.library.mappers;
+package telran.library.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
@@ -13,10 +13,16 @@ import telran.library.dto.Book;
 import telran.library.dto.PublisherAuthor;
 import telran.library.dto.Reader;
 import telran.library.dto.Record;
+import telran.library.mappers.AuthorMapper;
+import telran.library.mappers.BookMapper;
+import telran.library.mappers.Mapper;
+import telran.library.mappers.PublisherMapper;
+import telran.library.mappers.ReaderMapper;
+import telran.library.mappers.RecordMapper;
 
 
 @Configuration
-public class Config {     
+public class MapperConfiguration {     
     @Bean
     public ModelMapper modelMapper() {
         ModelMapper mapper = new ModelMapper();
