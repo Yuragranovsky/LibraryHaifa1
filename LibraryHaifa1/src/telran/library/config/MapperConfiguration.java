@@ -23,14 +23,14 @@ import telran.library.mappers.RecordMapper;
 
 @Configuration
 public class MapperConfiguration {     
-    @Bean
-    public ModelMapper modelMapper() {
-        ModelMapper mapper = new ModelMapper();
-        mapper.getConfiguration()
-                .setFieldMatchingEnabled(true)
-                .setSkipNullEnabled(true);
-        return mapper;
-    }
+//    @Bean
+//    public ModelMapper modelMapper() {
+//        ModelMapper mapper = new ModelMapper();
+//        mapper.getConfiguration()
+//                .setFieldMatchingEnabled(true)
+//                .setSkipNullEnabled(true);
+//        return mapper;
+//    }
 
     @Bean
     public Mapper authorMapper(){
